@@ -1,0 +1,552 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Theatre+ API",
+    "description": "Backend API for Theatre+ application",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Login authentication",
+        "description": "Login authentication for user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              },
+              "example": {
+                "email": "johndoe@example.com",
+                "password": "example_password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK",
+                  "data": {
+                    "token": "eySoihfdsaf340ihni2oknoda",
+                    "expiredAt": 2134234,
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johdndoe@example.com",
+                    "phone": "0832492332434"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Register authentication",
+        "description": "Register authentication for new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "examples": {
+                "User #1": {
+                  "$ref": "#/components/examples/User"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully logged in",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "code": 201,
+                  "status": "CREATED",
+                  "data": {
+                    "token": "eySoihfdsaf340ihni2oknoda",
+                    "expiredAt": 2134234,
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johdndoe@example.com",
+                    "phone": "0832492332434"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "tags": [
+          "Auth"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Logging out authenticated user",
+        "description": "Logging out user and delete the api key",
+        "responses": {
+          "200": {
+            "description": "Successfully logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get detail user",
+        "description": "Get detail user that currently logged in",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully get the user's detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK",
+                  "data": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johndoe@example.com",
+                    "phone": "0932401293"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Update user info",
+        "description": "Update user info",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": false,
+                    "nullable": true
+                  },
+                  "email": {
+                    "type": "string",
+                    "required": false,
+                    "nullable": true
+                  },
+                  "phone": {
+                    "type": "string",
+                    "required": false,
+                    "nullable": true
+                  },
+                  "password": {
+                    "type": "string",
+                    "required": false,
+                    "nullable": true
+                  }
+                }
+              },
+              "examples": {
+                "Complete ": {
+                  "$ref": "#/components/examples/User"
+                },
+                "Partial": {
+                  "value": {
+                    "name": "John Doe",
+                    "phone": "089231074432"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully update user info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "examples": {
+                  "User #1": {
+                    "$ref": "#/components/examples/200UserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Delete a user",
+        "operationId": "Delete a user from database",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully deleted a user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer"
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Create new user",
+        "description": "Create new user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              },
+              "examples": {
+                "User Example": {
+                  "$ref": "#/components/examples/User"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully create a new user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                },
+                "example": {
+                  "code": 201,
+                  "status": "CREATED",
+                  "data": {
+                    "id": 1,
+                    "name": "John Doe",
+                    "email": "johdndoe@example.com",
+                    "phone": "0832492332434"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "summary": "Get list of users",
+        "description": "Get more than a user in array form",
+        "responses": {
+          "200": {
+            "description": "Successfully fetched list of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessArrayResponse"
+                },
+                "examples": {
+                  "User #1": {
+                    "$ref": "#/components/examples/200UserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "description": "Authentication token for RESTful Theatre+ api",
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
+    "parameters": {
+      "UserId": {
+        "name": "userId",
+        "description": "Id that represent specific user",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "examples": {
+          "User #1": {
+            "value": 1
+          },
+          "User #2": {
+            "value": 2
+          }
+        }
+      }
+    },
+    "schemas": {
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "SuccessArrayResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true,
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "required": true,
+            "minLength": 1
+          },
+          "phone": {
+            "type": "string",
+            "required": true,
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "minLength": 6
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "required": true,
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "required": true,
+            "minLength": 6
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nama": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "responses": {
+      "AuthResponse": {
+        "description": "Successfully authenticated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuccessResponse"
+            },
+            "example": {
+              "code": 200,
+              "status": "OK",
+              "data": {
+                "token": "eySoihfdsaf340ihni2oknoda",
+                "id": 1,
+                "name": "John Doe",
+                "email": "johdndoe@example.com",
+                "phone": "0832492332434"
+              }
+            }
+          }
+        }
+      }
+    },
+    "examples": {
+      "User": {
+        "description": "Example of user req body",
+        "value": {
+          "name": "John Doe",
+          "email": "johndoe@example.com",
+          "phone": "08324703283",
+          "password": "example_password"
+        }
+      },
+      "200UserResponse": {
+        "value": {
+          "code": 200,
+          "status": "OK",
+          "data": [
+            {
+              "id": 1,
+              "name": "John Doe",
+              "email": "johdndoe@example.com",
+              "phone": "0832492332434"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
