@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import oozaw.theatre.dto.CreateUserDto;
 import oozaw.theatre.dto.LoginDto;
+import oozaw.theatre.dto.LogoutDto;
 import oozaw.theatre.entity.User;
 import oozaw.theatre.model.AuthResponse;
 import oozaw.theatre.model.WebResponse;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -202,6 +204,80 @@ class AuthControllerTest {
 
             assertNotNull(response.getErrors());
             assertNull(response.getData());
+        });
+    }
+
+    @Test
+    void testLogoutSuccess() throws Exception {
+        // insert a user
+        User user = new User();
+        user.setId("testId");
+        user.setName("Test Name");
+        user.setEmail("test@example.com");
+        user.setPhone("083294324893");
+        user.setPassword(BCrypt.hashpw("test_password", BCrypt.gensalt()));
+        user.setToken("test_token");
+        user.setTokenExpiredAt(System.currentTimeMillis());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        LogoutDto logoutDto = new LogoutDto();
+        logoutDto.setUserId("testId");
+
+        mockMvc.perform(
+                delete("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(logoutDto))
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
+
+            User userDB = userRepository.findById(logoutDto.getUserId()).orElse(null);
+
+            assertNotNull(userDB);
+            assertEquals(userDB.getId(), user.getId());
+            assertNull(userDB.getToken());
+            assertNull(userDB.getTokenExpiredAt());
+        });
+    }
+
+    @Test
+    void testLogoutBadRequest() throws Exception {
+        // insert a user
+        User user = new User();
+        user.setId("testId");
+        user.setName("Test Name");
+        user.setEmail("test@example.com");
+        user.setPhone("083294324893");
+        user.setPassword(BCrypt.hashpw("test_password", BCrypt.gensalt()));
+        user.setToken("test_token");
+        user.setTokenExpiredAt(System.currentTimeMillis());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        LogoutDto logoutDto = new LogoutDto();
+        logoutDto.setUserId("");
+
+        mockMvc.perform(
+                delete("/api/auth/logout")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(logoutDto))
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
+
+            WebResponse<String> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getErrors());
         });
     }
 }
