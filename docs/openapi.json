@@ -382,6 +382,19 @@
           }
         }
       }
+    },
+    "/orders": {
+      "post": {
+        "summary": "Create an order",
+        "description": "Place and create an order",
+        "requestBody": {
+          "required": true,
+          "content": {
+          }
+        },
+        "responses": {
+        }
+      }
     }
   },
   "components": {
