@@ -9,6 +9,7 @@ import oozaw.theatre.entity.User;
 import oozaw.theatre.model.AuthResponse;
 import oozaw.theatre.model.WebResponse;
 import oozaw.theatre.repository.UserRepository;
+import oozaw.theatre.security.BCrypt;
 import oozaw.theatre.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,18 +140,31 @@ class AuthControllerTest {
 
     @Test
     void testLoginSuccess() throws Exception {
+        // insert a user
+        User user = new User();
+        user.setId("testId");
+        user.setName("Test Name");
+        user.setEmail("test@example.com");
+        user.setPhone("083294324893");
+        user.setPassword(BCrypt.hashpw("test_password", BCrypt.gensalt()));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
         LoginDto loginDto = new LoginDto();
         loginDto.setEmail("test@example.com");
         loginDto.setPassword("test_password");
 
         mockMvc.perform(
-                post("/api/auth/register")
+                post("/api/auth/login")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(loginDto))
         ).andExpectAll(
                 status().isOk()
         ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
             WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
@@ -163,6 +177,31 @@ class AuthControllerTest {
             assertNotNull(userDB);
             assertEquals(userDB.getToken(), response.getData().getToken());
             assertEquals(userDB.getTokenExpiredAt(), response.getData().getExpiredAt());
+        });
+    }
+
+    @Test
+    void testLoginBadRequest() throws Exception {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("");
+        loginDto.setPassword("");
+
+        mockMvc.perform(
+                post("/api/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDto))
+        ).andExpectAll(
+                status().isBadRequest()
+        ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
+
+            WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getErrors());
+            assertNull(response.getData());
         });
     }
 }

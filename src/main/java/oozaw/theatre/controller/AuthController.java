@@ -30,6 +30,7 @@ public class AuthController {
                 .status(HttpStatus.CREATED.name())
                 .data(authService.register(createUserDto))
                 .build();
+
         return ResponseEntity.status(HttpStatus.CREATED).body(body);
     }
 
@@ -38,11 +39,13 @@ public class AuthController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public WebResponse<AuthResponse> login(@RequestBody LoginDto loginDto) {
-        return WebResponse.<AuthResponse>builder()
-                .code(200)
-                .status("OK")
+    public ResponseEntity<WebResponse<AuthResponse>> login(@RequestBody LoginDto loginDto) {
+        WebResponse<AuthResponse> body = WebResponse.<AuthResponse>builder()
+                .code(HttpStatus.OK.value())
+                .status(HttpStatus.OK.name())
                 .data(authService.login(loginDto))
                 .build();
+
+        return ResponseEntity.status(HttpStatus.OK).body(body);
     }
 }
