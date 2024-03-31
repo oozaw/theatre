@@ -1,5 +1,6 @@
 package oozaw.theatre.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import oozaw.theatre.dto.LoginDto;
 import oozaw.theatre.dto.LogoutDto;
 import oozaw.theatre.entity.User;
 import oozaw.theatre.model.AuthResponse;
+import oozaw.theatre.model.UserResponse;
 import oozaw.theatre.repository.UserRepository;
 import oozaw.theatre.security.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,40 +26,22 @@ public class AuthServiceImpl implements AuthService {
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ValidationService validationService;
 
     @Transactional
     @Override
     public AuthResponse register(CreateUserDto createUserDto) {
-        validationService.validate(createUserDto);
 
-        if (userRepository.existsByEmail(createUserDto.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already registered");
-        }
+        User user = userService.create(createUserDto);
 
-        User user = new User();
-        user.setId(UUID.randomUUID().toString());
-        user.setName(createUserDto.getName());
-        user.setPhone(createUserDto.getPhone());
-        user.setEmail(createUserDto.getEmail());
-        user.setPassword(BCrypt.hashpw(createUserDto.getPassword(), BCrypt.gensalt()));
-        user.setToken(UUID.randomUUID().toString());
-        user.setTokenExpiredAt(next30Days());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setUpdatedAt(LocalDateTime.now());
+        generateToken(user);
 
         userRepository.save(user);
 
-        return AuthResponse.builder()
-                .token(user.getToken())
-                .expiredAt(user.getTokenExpiredAt())
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .createdAt(user.getCreatedAt())
-                .updatedAt(user.getUpdatedAt())
-                .build();
+        return new AuthResponse(user);
     }
 
     @Transactional
@@ -69,20 +53,12 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials"));
 
         if (BCrypt.checkpw(loginDto.getPassword(), user.getPassword())) {
-            user.setToken(UUID.randomUUID().toString());
-            user.setTokenExpiredAt(next30Days());
+
+            generateToken(user);
+
             userRepository.save(user);
 
-            return AuthResponse.builder()
-                    .token(user.getToken())
-                    .expiredAt(user.getTokenExpiredAt())
-                    .id(user.getId())
-                    .name(user.getName())
-                    .email(user.getEmail())
-                    .phone(user.getPhone())
-                    .createdAt(user.getCreatedAt())
-                    .updatedAt(user.getUpdatedAt())
-                    .build();
+            return new AuthResponse(user);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
@@ -100,6 +76,11 @@ public class AuthServiceImpl implements AuthService {
         user.setTokenExpiredAt(null);
 
         userRepository.save(user);
+    }
+
+    private void generateToken(User user) {
+        user.setToken(UUID.randomUUID().toString());
+        user.setTokenExpiredAt(next30Days());
     }
 
     private Long next30Days() {
