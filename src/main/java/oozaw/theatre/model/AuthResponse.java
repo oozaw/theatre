@@ -32,14 +32,16 @@ public class AuthResponse {
 
     private LocalDateTime updatedAt;
 
-    public AuthResponse(User user) {
-        this.token = user.getToken();
-        this.expiredAt = user.getTokenExpiredAt();
-        this.id = user.getId();
-        this.name = user.getName();
-        this.email = user.getEmail();
-        this.phone = user.getPhone();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
+    public static AuthResponse fromEntity(User user) {
+        return AuthResponse.builder()
+                .token(user.getToken())
+                .expiredAt(user.getTokenExpiredAt())
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
+                .build();
     }
 }

@@ -41,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(user);
 
-        return new AuthResponse(user);
+        return AuthResponse.fromEntity(user);
     }
 
     @Transactional
@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
             userRepository.save(user);
 
-            return new AuthResponse(user);
+            return AuthResponse.fromEntity(user);
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
