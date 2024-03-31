@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
       return user;
    }
 
+   @Transactional
    @Override
    public UserResponse get(String userId) {
       if (userId == null || userId.isEmpty() || userId.isBlank()) {
