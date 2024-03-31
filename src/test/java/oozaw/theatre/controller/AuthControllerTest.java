@@ -62,6 +62,8 @@ class AuthControllerTest {
         ).andExpectAll(
                 status().isCreated()
         ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
             WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
             });
 
@@ -179,6 +181,42 @@ class AuthControllerTest {
             assertNotNull(userDB);
             assertEquals(userDB.getToken(), response.getData().getToken());
             assertEquals(userDB.getTokenExpiredAt(), response.getData().getExpiredAt());
+        });
+    }
+
+    @Test
+    void testLoginUnauthorized() throws Exception {
+        // insert a user
+        User user = new User();
+        user.setId("testId");
+        user.setName("Test Name");
+        user.setEmail("test@example.com");
+        user.setPhone("083294324893");
+        user.setPassword(BCrypt.hashpw("test_password", BCrypt.gensalt()));
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        LoginDto loginDto = new LoginDto();
+        loginDto.setEmail("test2@example.com");
+        loginDto.setPassword("test_password");
+
+        mockMvc.perform(
+                post("/api/auth/login")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(loginDto))
+        ).andExpectAll(
+                status().isUnauthorized()
+        ).andDo(result -> {
+
+            log.info(result.getResponse().getContentAsString());
+
+            WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+            });
+
+            assertNotNull(response.getErrors());
+            assertNull(response.getData());
         });
     }
 
