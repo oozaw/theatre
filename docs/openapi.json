@@ -118,6 +118,23 @@
         ],
         "summary": "Logging out authenticated user",
         "description": "Logging out user and delete the api key",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "example": {
+                "userId": 1
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successfully logged out",
