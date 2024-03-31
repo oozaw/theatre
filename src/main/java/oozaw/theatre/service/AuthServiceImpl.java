@@ -1,9 +1,11 @@
 package oozaw.theatre.service;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import oozaw.theatre.dto.CreateUserDto;
 import oozaw.theatre.dto.LoginDto;
+import oozaw.theatre.dto.LogoutDto;
 import oozaw.theatre.entity.User;
 import oozaw.theatre.model.AuthResponse;
 import oozaw.theatre.repository.UserRepository;
@@ -84,6 +86,20 @@ public class AuthServiceImpl implements AuthService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
+    }
+
+    @Transactional
+    @Override
+    public void logout(LogoutDto logoutDto) {
+        validationService.validate(logoutDto);
+
+        User user = userRepository.findById(logoutDto.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "User not found"));
+
+        user.setToken(null);
+        user.setTokenExpiredAt(null);
+
+        userRepository.save(user);
     }
 
     private Long next30Days() {
