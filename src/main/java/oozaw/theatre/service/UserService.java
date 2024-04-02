@@ -9,13 +9,13 @@ import java.util.List;
 
 public interface UserService {
 
-    User create(CreateUserDto createUserDto);
+   User create(CreateUserDto createUserDto);
 
-    UserResponse get(String userId);
+   UserResponse get(String userId);
 
-    List<UserResponse> getAll();
+   List<UserResponse> getMany(String name);
 
-    UserResponse update(UpdateUserDto updateUserDto);
+   UserResponse update(UpdateUserDto updateUserDto);
 
-    void delete(String userId);
+   void delete(String userId);
 }

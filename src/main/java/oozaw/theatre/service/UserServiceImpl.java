@@ -59,14 +59,11 @@ public class UserServiceImpl implements UserService {
          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID is required");
       }
 
-      User user = userRepository.findById(userId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+      User user = userRepository.findById(userId).orElseThrow(
+         () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
+      );
 
       return UserResponse.fromEntity(user);
-   }
-
-   @Override
-   public List<UserResponse> getAll() {
-      return null;
    }
 
    @Override

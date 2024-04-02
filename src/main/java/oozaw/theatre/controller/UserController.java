@@ -7,8 +7,11 @@ import oozaw.theatre.model.WebResponse;
 import oozaw.theatre.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
@@ -39,6 +42,22 @@ public class UserController {
    )
    public ResponseEntity<WebResponse<UserResponse>> getUser(@PathVariable String userId) {
       UserResponse userResponse = userService.get(userId);
+
+      return ResponseEntity.status(HttpStatus.OK).body(
+         WebResponse.<UserResponse>builder()
+            .code(HttpStatus.OK.value())
+            .status(HttpStatus.OK.name())
+            .data(userResponse)
+            .build()
+      );
+   }
+
+   @GetMapping(
+      path = "/api/users/current",
+      produces = MediaType.APPLICATION_JSON_VALUE
+   )
+   public ResponseEntity<WebResponse<UserResponse>> getCurrentUser(User user) {
+      UserResponse userResponse = UserResponse.fromEntity(user);
 
       return ResponseEntity.status(HttpStatus.OK).body(
          WebResponse.<UserResponse>builder()
