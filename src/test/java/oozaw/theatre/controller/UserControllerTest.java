@@ -225,4 +225,101 @@ class UserControllerTest {
          assertNull(response.getData());
       });
    }
+
+   @Test
+   void testGetCurrentUserSuccess() throws Exception {
+
+      User user = new User();
+      user.setId("testId");
+      user.setName("Test Name");
+      user.setEmail("test@example.com");
+      user.setPhone("083294324893");
+      user.setPassword("test_password");
+      user.setToken("test_token");
+      user.setTokenExpiredAt(System.currentTimeMillis() + 10000000000L);
+      user.setCreatedAt(LocalDateTime.now());
+      user.setUpdatedAt(LocalDateTime.now());
+      userRepository.save(user);
+
+      mockMvc.perform(
+         get("/api/users/current")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "test_token")
+      ).andExpectAll(
+         status().isOk()
+      ).andDo(result -> {
+
+         log.info(result.getResponse().getContentAsString());
+         WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNull(response.getErrors());
+         assertNotNull(response.getData().getEmail());
+         assertEquals(user.getEmail(), response.getData().getEmail());
+      });
+   }
+
+   @Test
+   void testGetCurrentUserUnauthorizedNoApi() throws Exception {
+
+      User user = new User();
+      user.setId("testId");
+      user.setName("Test Name");
+      user.setEmail("test@example.com");
+      user.setPhone("083294324893");
+      user.setPassword("test_password");
+      user.setToken("test_token");
+      user.setTokenExpiredAt(System.currentTimeMillis() + 10000000000L);
+      user.setCreatedAt(LocalDateTime.now());
+      user.setUpdatedAt(LocalDateTime.now());
+      userRepository.save(user);
+
+      mockMvc.perform(
+         get("/api/users/current")
+            .accept(MediaType.APPLICATION_JSON)
+      ).andExpectAll(
+         status().isUnauthorized()
+      ).andDo(result -> {
+
+         log.info(result.getResponse().getContentAsString());
+         WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNotNull(response.getErrors());
+         assertNull(response.getData());
+      });
+   }
+
+   @Test
+   void testGetCurrentUserUnauthorizedApiNotFound() throws Exception {
+
+      User user = new User();
+      user.setId("testId");
+      user.setName("Test Name");
+      user.setEmail("test@example.com");
+      user.setPhone("083294324893");
+      user.setPassword("test_password");
+      user.setToken("test_token");
+      user.setTokenExpiredAt(System.currentTimeMillis() + 10000000000L);
+      user.setCreatedAt(LocalDateTime.now());
+      user.setUpdatedAt(LocalDateTime.now());
+      userRepository.save(user);
+
+      mockMvc.perform(
+         get("/api/users/current")
+            .accept(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "another_token")
+      ).andExpectAll(
+         status().isUnauthorized()
+      ).andDo(result -> {
+
+         log.info(result.getResponse().getContentAsString());
+         WebResponse<AuthResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNotNull(response.getErrors());
+         assertNull(response.getData());
+      });
+   }
 }
