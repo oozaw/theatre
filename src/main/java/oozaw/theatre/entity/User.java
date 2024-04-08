@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import oozaw.theatre.model.Role;
 
 import java.sql.Time;
 import java.time.LocalDateTime;
@@ -20,25 +21,27 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
 
-    @Id
-    private String id;
+   @Id
+   private String id;
 
-    private String name;
+   private String name;
 
-    private String email;
+   private String email;
 
-    private String phone;
+   private String phone;
 
-    private String password;
+   private String password;
 
-    private String token;
+   private Role role;
 
-    @Column(name = "token_expired_at")
-    private Long tokenExpiredAt;
+   private String token;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+   @Column(name = "token_expired_at")
+   private Long tokenExpiredAt;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+   @Column(name = "created_at")
+   private LocalDateTime createdAt;
+
+   @Column(name = "updated_at")
+   private LocalDateTime updatedAt;
 }

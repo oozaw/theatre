@@ -1,5 +1,7 @@
 CREATE DATABASE theatre;
 
+DROP TABLE IF EXISTS users;
+
 CREATE TABLE users
 (
     id               VARCHAR(100) NOT NULL,
@@ -7,6 +9,7 @@ CREATE TABLE users
     email            VARCHAR(100) NOT NULL UNIQUE,
     phone            VARCHAR(100) NOT NULL UNIQUE,
     password         VARCHAR(100) NOT NULL,
+    role             VARCHAR(100) NOT NULL,
     token            VARCHAR(100) UNIQUE,
     token_expired_at BIGINT,
     created_at       TIMESTAMP    NOT NULL DEFAULT now(),

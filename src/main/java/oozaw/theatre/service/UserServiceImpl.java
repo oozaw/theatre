@@ -1,6 +1,7 @@
 package oozaw.theatre.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import oozaw.theatre.dto.CreateUserDto;
 import oozaw.theatre.dto.UpdateUserDto;
 import oozaw.theatre.entity.User;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
    @Autowired
@@ -64,6 +66,24 @@ public class UserServiceImpl implements UserService {
       );
 
       return UserResponse.fromEntity(user);
+   }
+
+   @Transactional
+   @Override
+   public List<UserResponse> getMany(String name) {
+      List<User> users;
+
+      if (name != null && !name.isEmpty() && !name.isBlank()) {
+         users = userRepository.findByNameLike(name);
+      } else {
+         users = userRepository.findAll();
+      }
+
+      if (users.isEmpty()) {
+         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No users found");
+      }
+
+      return users.stream().map(UserResponse::fromEntity).toList();
    }
 
    @Override

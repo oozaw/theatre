@@ -67,4 +67,20 @@ public class UserController {
             .build()
       );
    }
+
+   @GetMapping(
+      path = "/api/users",
+      produces = "application/json"
+   )
+   public ResponseEntity<WebResponse<List<UserResponse>>> getMany(@RequestParam(required = false) String name) {
+      List<UserResponse> userResponses = userService.getMany(name);
+
+      return ResponseEntity.status(HttpStatus.OK).body(
+         WebResponse.<List<UserResponse>>builder()
+            .code(HttpStatus.OK.value())
+            .status(HttpStatus.OK.name())
+            .data(userResponses)
+            .build()
+      );
+   }
 }
