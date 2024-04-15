@@ -22,7 +22,6 @@ public class TheatreServiceImpl implements TheatreService {
    @Transactional
    @Override
    public List<TheatreResponse> getMany(String name) {
-
       List<Theatre> theatres;
 
       if (name != null && !name.isEmpty() && !name.isBlank()) {
@@ -36,5 +35,13 @@ public class TheatreServiceImpl implements TheatreService {
       }
 
       return theatres.stream().map(TheatreResponse::fromEntity).collect(Collectors.toList());
+   }
+
+   @Transactional
+   @Override
+   public TheatreResponse get(String id) {
+      return theatreRepository.findById(id)
+         .map(TheatreResponse::fromEntity)
+         .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Theatre not found"));
    }
 }

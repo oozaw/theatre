@@ -7,11 +7,9 @@ import oozaw.theatre.entity.Theatre;
 import oozaw.theatre.entity.User;
 import oozaw.theatre.model.Role;
 import oozaw.theatre.model.TheatreResponse;
-import oozaw.theatre.model.UserResponse;
 import oozaw.theatre.model.WebResponse;
 import oozaw.theatre.repository.TheatreRepository;
 import oozaw.theatre.repository.UserRepository;
-import oozaw.theatre.service.TheatreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -141,6 +138,27 @@ class TheatreControllerTest {
    }
 
    @Test
+   void testGetManyTheatresNotFound() throws Exception {
+
+      mockMvc.perform(
+         get(API_THEATRES)
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "test_token")
+      ).andExpectAll(
+         status().isNotFound()
+      ).andDo(result -> {
+         log.info(result.getResponse().getContentAsString());
+
+         WebResponse<List<TheatreResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNotNull(response.getErrors());
+         assertNull(response.getData());
+      });
+   }
+
+   @Test
    void testGetManyTheatresByNameSuccess() throws Exception {
       insertData();
 
@@ -160,6 +178,74 @@ class TheatreControllerTest {
          assertNull(response.getErrors());
          assertNotNull(response.getData());
          assertEquals(1, response.getData().size());
+      });
+   }
+
+   @Test
+   void testGetManyTheatresByNameNotFound() throws Exception {
+      insertData();
+
+      mockMvc.perform(
+         get(API_THEATRES + "?name={name}", "Tidak ada test")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "test_token")
+      ).andExpectAll(
+         status().isNotFound()
+      ).andDo(result -> {
+         log.info(result.getResponse().getContentAsString());
+
+         WebResponse<List<TheatreResponse>> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNotNull(response.getErrors());
+         assertNull(response.getData());
+      });
+   }
+
+   @Test
+   void testGetDetailTheatreSuccess() throws Exception {
+      insertData();
+
+      mockMvc.perform(
+         get(API_THEATRES + "/{theatreId}", "testId")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "test_token")
+      ).andExpectAll(
+         status().isOk()
+      ).andDo(result -> {
+         log.info(result.getResponse().getContentAsString());
+
+         WebResponse<TheatreResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNull(response.getErrors());
+         assertNotNull(response.getData());
+
+         assertEquals(response.getData().getName(), "Theatre 1");
+      });
+   }
+
+   @Test
+   void testGetDetailTheatreNotFound() throws Exception {
+      insertData();
+
+      mockMvc.perform(
+         get(API_THEATRES + "/{theatreId}", "testIdNotFound")
+            .accept(MediaType.APPLICATION_JSON)
+            .contentType(MediaType.APPLICATION_JSON)
+            .header("X-API-KEY", "test_token")
+      ).andExpectAll(
+         status().isNotFound()
+      ).andDo(result -> {
+         log.info(result.getResponse().getContentAsString());
+
+         WebResponse<TheatreResponse> response = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<>() {
+         });
+
+         assertNotNull(response.getErrors());
+         assertNull(response.getData());
       });
    }
 }

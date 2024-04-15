@@ -19,6 +19,22 @@ public class TheatreController {
    private TheatreService theatreService;
 
    @GetMapping(
+      path = "/{theatreId}",
+      produces = MediaType.APPLICATION_JSON_VALUE
+   )
+   ResponseEntity<WebResponse<TheatreResponse>> getDetailTheatre(@PathVariable() String theatreId) {
+      TheatreResponse theatreResponse = theatreService.get(theatreId);
+
+      return ResponseEntity.status(HttpStatus.OK).body(
+         WebResponse.<TheatreResponse>builder()
+            .code(HttpStatus.OK.value())
+            .status(HttpStatus.OK.name())
+            .data(theatreResponse)
+            .build()
+      );
+   }
+
+   @GetMapping(
       path = "",
       produces = MediaType.APPLICATION_JSON_VALUE
    )
