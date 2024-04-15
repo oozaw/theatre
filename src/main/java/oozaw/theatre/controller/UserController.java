@@ -72,7 +72,7 @@ public class UserController {
       path = "/api/users",
       produces = "application/json"
    )
-   public ResponseEntity<WebResponse<List<UserResponse>>> getMany(@RequestParam(required = false) String name) {
+   public ResponseEntity<WebResponse<List<UserResponse>>> getMany(@RequestParam(required = false) String name, User user) {
       List<UserResponse> userResponses = userService.getMany(name);
 
       return ResponseEntity.status(HttpStatus.OK).body(

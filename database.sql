@@ -19,3 +19,20 @@ CREATE TABLE users
 
 SELECT *
 FROM users;
+
+CREATE TABLE theatres
+(
+    id         VARCHAR(100) NOT NULL,
+    name       VARCHAR(100) NOT NULL,
+    city       SMALLINT     NOT NULL,
+    province   SMALLINT     NOT NULL,
+    address    TEXT         NOT NULL,
+    latitude   VARCHAR(100) NOT NULL,
+    longitude  VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP    NOT NULL,
+    updated_at TIMESTAMP    NOT NULL,
+    PRIMARY KEY (id)
+);
+
+SELECT *
+FROM theatres;
