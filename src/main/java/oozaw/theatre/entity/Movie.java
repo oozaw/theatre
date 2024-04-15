@@ -11,31 +11,26 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "theatres")
-public class Theatre {
+@Table(name = "movies")
+public class Movie {
 
    @Id
    private String id;
 
-   private String name;
+   private String title;
 
-   private String city;
+   private String synopsys;
 
-   private String province;
-
-   private String address;
-
-   private String latitude;
-
-   private String longitude;
+   private String duration;
 
    @Column(name = "created_at")
    private LocalDateTime createdAt;
+
 
    @Column(name = "updated_at")
    private LocalDateTime updatedAt;

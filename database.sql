@@ -20,12 +20,14 @@ CREATE TABLE users
 SELECT *
 FROM users;
 
+DROP TABLE IF EXISTS theatres;
+
 CREATE TABLE theatres
 (
     id         VARCHAR(100) NOT NULL,
     name       VARCHAR(100) NOT NULL,
-    city       SMALLINT     NOT NULL,
-    province   SMALLINT     NOT NULL,
+    city       VARCHAR(100) NOT NULL,
+    province   VARCHAR(100) NOT NULL,
     address    TEXT         NOT NULL,
     latitude   VARCHAR(100) NOT NULL,
     longitude  VARCHAR(100) NOT NULL,
@@ -36,3 +38,19 @@ CREATE TABLE theatres
 
 SELECT *
 FROM theatres;
+
+DROP TABLE IF EXISTS movies;
+
+CREATE TABLE movies
+(
+    id         VARCHAR(100) NOT NULL,
+    title      VARCHAR(100) NOT NULL,
+    synopsys   TEXT         NOT NULL,
+    duration   VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP    NOT NULL,
+    updated_at TIMESTAMP    NOT NULL,
+    PRIMARY KEY (id)
+);
+
+SELECT *
+FROM movies;

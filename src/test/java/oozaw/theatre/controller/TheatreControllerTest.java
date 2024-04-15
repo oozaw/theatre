@@ -66,8 +66,8 @@ class TheatreControllerTest {
       Theatre theatre = new Theatre();
       theatre.setId("testId");
       theatre.setName("Theatre 1");
-      theatre.setCity(1);
-      theatre.setProvince(1);
+      theatre.setCity("1");
+      theatre.setProvince("1");
       theatre.setAddress("Address1");
       theatre.setLatitude("234234");
       theatre.setLongitude("234234");
@@ -77,8 +77,8 @@ class TheatreControllerTest {
       Theatre theatre2 = new Theatre();
       theatre2.setId("testId2");
       theatre2.setName("Theatre 2");
-      theatre2.setCity(1);
-      theatre2.setProvince(1);
+      theatre2.setCity("1");
+      theatre2.setProvince("1");
       theatre2.setAddress("Address2");
       theatre2.setLatitude("234234");
       theatre2.setLongitude("234234");
@@ -88,8 +88,8 @@ class TheatreControllerTest {
       Theatre theatre3 = new Theatre();
       theatre3.setId("testId3");
       theatre3.setName("Theatre 3");
-      theatre3.setCity(1);
-      theatre3.setProvince(1);
+      theatre3.setCity("1");
+      theatre3.setProvince("1");
       theatre3.setAddress("Address3");
       theatre3.setLatitude("234234");
       theatre3.setLongitude("234234");
@@ -99,8 +99,8 @@ class TheatreControllerTest {
       Theatre theatre4 = new Theatre();
       theatre4.setId("testId4");
       theatre4.setName("Theatre 4");
-      theatre4.setCity(1);
-      theatre4.setProvince(1);
+      theatre4.setCity("1");
+      theatre4.setProvince("1");
       theatre4.setAddress("Address4");
       theatre4.setLatitude("234234");
       theatre4.setLongitude("234234");

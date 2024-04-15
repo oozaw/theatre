@@ -18,9 +18,9 @@ public class TheatreResponse {
 
    private String name;
 
-   private int city;
+   private String city;
 
-   private int province;
+   private String province;
 
    private String address;
 
