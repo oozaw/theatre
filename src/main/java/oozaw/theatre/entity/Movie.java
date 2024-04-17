@@ -1,13 +1,13 @@
 package oozaw.theatre.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import io.hypersistence.utils.hibernate.type.array.StringArrayType;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import oozaw.theatre.model.Genre;
+import org.hibernate.annotations.Type;
 
 import java.time.LocalDateTime;
 
@@ -24,13 +24,16 @@ public class Movie {
 
    private String title;
 
+   @Type(value = StringArrayType.class)
+   @Enumerated(EnumType.STRING)
+   private Genre[] genres;
+
    private String synopsys;
 
    private String duration;
 
    @Column(name = "created_at")
    private LocalDateTime createdAt;
-
 
    @Column(name = "updated_at")
    private LocalDateTime updatedAt;

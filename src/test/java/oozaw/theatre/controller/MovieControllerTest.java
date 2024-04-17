@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import oozaw.theatre.entity.Movie;
 import oozaw.theatre.entity.User;
+import oozaw.theatre.model.Genre;
 import oozaw.theatre.model.MovieResponse;
 import oozaw.theatre.model.Role;
 import oozaw.theatre.model.WebResponse;
@@ -44,6 +45,7 @@ class MovieControllerTest {
 
    @BeforeEach
    void setUp() {
+      userRepository.deleteAll();
       movieRepository.deleteAll();
 
       User user = new User();
@@ -61,6 +63,7 @@ class MovieControllerTest {
       Movie movie = new Movie();
       movie.setId("testId");
       movie.setTitle("Title 1");
+      movie.setGenres(new Genre[]{Genre.ADVENTURE, Genre.ACTION});
       movie.setSynopsys("Synopsys 1");
       movie.setDuration("12032");
       movie.setCreatedAt(LocalDateTime.now());
@@ -69,6 +72,7 @@ class MovieControllerTest {
       Movie movie2 = new Movie();
       movie2.setId("testId2");
       movie2.setTitle("Title 2");
+      movie2.setGenres(new Genre[]{Genre.ADVENTURE, Genre.ACTION});
       movie2.setSynopsys("Synopsys 2");
       movie2.setDuration("12032");
       movie2.setCreatedAt(LocalDateTime.now());
@@ -77,6 +81,7 @@ class MovieControllerTest {
       Movie movie3 = new Movie();
       movie3.setId("testId3");
       movie3.setTitle("Title 3");
+      movie3.setGenres(new Genre[]{Genre.ADVENTURE, Genre.ACTION});
       movie3.setSynopsys("Synopsys 3");
       movie3.setDuration("12032");
       movie3.setCreatedAt(LocalDateTime.now());
@@ -85,6 +90,7 @@ class MovieControllerTest {
       Movie movie4 = new Movie();
       movie4.setId("testId4");
       movie4.setTitle("Title 4");
+      movie4.setGenres(new Genre[]{Genre.SCIENCE_FICTION, Genre.COMEDY});
       movie4.setSynopsys("Synopsys 4");
       movie4.setDuration("12032");
       movie4.setCreatedAt(LocalDateTime.now());

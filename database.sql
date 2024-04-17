@@ -1,5 +1,8 @@
 CREATE DATABASE theatre;
 
+-- CREATE TYPE genre as ENUM
+--     ('ACTION', 'COMEDY', 'DRAMA', 'HORROR', 'ADVENTURE', 'HISTORICAL', 'FANTASY', 'ROMANCE', 'SCIENCE FICTION', 'THRILLER', 'CRIME', 'ANIMATION', 'MYSTERY');
+
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users
@@ -43,12 +46,13 @@ DROP TABLE IF EXISTS movies;
 
 CREATE TABLE movies
 (
-    id         VARCHAR(100) NOT NULL,
-    title      VARCHAR(100) NOT NULL,
-    synopsys   TEXT         NOT NULL,
-    duration   VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP    NOT NULL,
-    updated_at TIMESTAMP    NOT NULL,
+    id         VARCHAR(100)  NOT NULL,
+    title      VARCHAR(100)  NOT NULL,
+    genres     VARCHAR(50)[] NOT NULL,
+    synopsys   TEXT          NOT NULL,
+    duration   VARCHAR(100)  NOT NULL,
+    created_at TIMESTAMP     NOT NULL,
+    updated_at TIMESTAMP     NOT NULL,
     PRIMARY KEY (id)
 );
 

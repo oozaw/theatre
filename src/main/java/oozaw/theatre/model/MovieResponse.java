@@ -18,6 +18,8 @@ public class MovieResponse {
 
    private String title;
 
+   private Genre[] genres;
+
    private String synopsys;
 
    private String duration;
@@ -30,6 +32,7 @@ public class MovieResponse {
       return MovieResponse.builder()
          .id(movie.getId())
          .title(movie.getTitle())
+         .genres(movie.getGenres())
          .synopsys(movie.getSynopsys())
          .duration(movie.getDuration())
          .createdAt(movie.getCreatedAt())
